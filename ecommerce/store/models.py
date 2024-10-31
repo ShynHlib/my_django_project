@@ -20,6 +20,8 @@ class Product(models.Model):
     image = models.ImageField(upload_to="images/")
     slug = models.SlugField(max_length=250)
 
+    category = models.ForeignKey(Category, related_name="product", on_delete=models.CASCADE, null=True)
+
     class Meta:
         verbose_name_plural = 'products'
 
