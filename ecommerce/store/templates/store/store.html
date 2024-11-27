@@ -2,7 +2,30 @@
 {% load static %}
 
 {% block content %}
-
+    <style>
+    .text-info::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+    }
+    .card {
+        overflow: hidden;
+        position: relative;
+    }
+    .card-text {
+        height: 7vh;
+        margin-bottom: 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .card-value {
+        font-size: 20px;
+        position: relative;
+    }
+    </style>
     <section class="py-4 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
@@ -12,7 +35,7 @@
                     Browse our extensive collection.
                 </p>
                 <br>
-                <a href="#" class="btn btn-primary my-2"> Create an account </a>
+                <a href="#" class="btn btn-primary my-2" style="cursor:pointer;"> Create an account </a>
             </div>
         </div>
     </section>
