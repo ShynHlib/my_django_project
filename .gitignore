@@ -5,4 +5,6 @@ ecommerce/store/__pycache__/
 ecommerce/store/migrations/__pycache__/
 ecommerce/cart/__pycache__/
 ecommerce/cart/migrations/__pycache__/
+ecommerce/account/__pycache__/
+ecommerce/account/migrations/__pycache__/
 .DS_Store
