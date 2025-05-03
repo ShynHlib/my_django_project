@@ -8,3 +8,4 @@ ecommerce/cart/migrations/__pycache__/
 ecommerce/account/__pycache__/
 ecommerce/account/migrations/__pycache__/
 .DS_Store
+ecommerce/.env

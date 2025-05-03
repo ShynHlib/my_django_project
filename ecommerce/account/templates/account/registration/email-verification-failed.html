@@ -1,1 +1,26 @@
-<h1>Something went wrong... Your account is not verified!</h1>
+{% include "store/base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        background-color: grey;
+    }
+    .form-layout {
+        border-radius: 15px;
+    }
+</style>
+<body>
+    <br>
+    <div class="container bg-white shadow-md p-5 form-layout">
+        <div class="text-center">
+            <i class="fa fa-user-times fa-3x text-danger" aria-hidden="true"></i>
+            <br><br>
+            <h5><strong>Something went wrong... Your account is not verified!</strong></h5>
+            <hr>
+            <p>Please try again or reach support</p>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
