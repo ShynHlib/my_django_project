@@ -33,6 +33,7 @@
         aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        {% block dropdown %}
         <div class="collapse navbar-collapse" id="navbarCollapse">     
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item dropdown">
@@ -55,14 +56,32 @@
                 </li>
             </ul>
         </div>
-        <div class="collapse navbar-collapse text-center" id="navbarNavDropdown">            
+        {% endblock %}
+        <div class="collapse navbar-collapse text-center" id="navbarNavDropdown">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">           
-                    <a class="btn btn-alert navbar-btn text-white" type="button"  href="{% url 'register' %}"> Register </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-alert navbar-btn text-white" type="button"  href="/"> Login </a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="btn btn-alert navbar-btn text-white" type="button"  href="{% url 'my-dashboard' %}">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            &nbsp;
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-alert navbar-btn text-white" type="button"  href="{% url 'my-logout' %}">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                            &nbsp;
+                            Logout
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-alert navbar-btn text-white" type="button"  href="{% url 'register' %}"> Register </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-alert navbar-btn text-white" type="button"  href="{% url 'my-login' %}"> Login </a>
+                    </li>
+                {% endif %}
                 &nbsp; &nbsp; &nbsp;
                 <li class="nav-item">
                     <a type="button" role="button" href="{% url 'cart-summary' %}" class="btn btn-outline-secondary">
@@ -83,6 +102,28 @@
             </ul>
         </div>
     </nav>
+    {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <h6 id="message-timer" class="alert alert-success text-center rounded-0">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                {{message}}
+            </h6>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <h6 id="message-timer" class="alert alert-danger text-center rounded-0">
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                &nbsp;
+                {{message}}
+            </h6>
+        {% endif %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+            <h6 id="message-timer" class="alert alert-info text-center rounded-0">
+                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                &nbsp;
+                {{message}}
+            </h6>
+        {% endif %}
+    {% endfor %}
     <body>
         {% block content %} 
         
@@ -90,4 +131,5 @@
             
         {% endblock %}
     </body>
+    <script src="{% static 'js/app.js' %}"></script>
 </html>

@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
-from .forms import CreateUserForm
+from .forms import CreateUserForm, LoginForm, UpdateUserForm
 from django.contrib.sites.shortcuts import get_current_site
 from .token import user_tokenizer_generate
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, auth
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 def register(request):
@@ -57,3 +60,67 @@ def email_verification_success(request):
 
 def email_verification_failed(request):
     return render(request, 'account/registration/email-verification-failed.html')
+
+def login(request):
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                auth_login(request, user)
+
+                return redirect('my-dashboard')
+
+    context = {'form': form}
+
+    return render(request, 'account/my-login.html', context=context)
+
+def logout(request):
+    try:
+        for key in list(request.session.keys()):
+            if key == 'session_key':
+                continue
+            del request.session[key]
+    except KeyError:
+        pass
+
+    messages.success(request, "Logged out successfully.")
+
+    return redirect('store')
+
+
+@login_required(login_url='my-login')
+def dashboard(request):
+    return render(request, 'account/my-dashboard.html')
+
+@login_required(login_url='my-login')
+def profile_management(request):
+    user_form = UpdateUserForm(instance=request.user)
+
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        if user_form.is_valid():
+            user_form.save()
+            messages.info(request, "Account updated successfully.")
+
+            return redirect('my-dashboard')
+
+    context = {'user_form': user_form}
+
+    return render(request, 'account/profile-management.html', context=context)
+
+@login_required(login_url='my-login')
+def delete_account(request):
+    user = User.objects.get(id=request.user.id)
+
+    if request.method == 'POST':
+        user.delete()
+        messages.error(request, "Account deleted successfully.")
+
+        return redirect('store')
+
+    return render(request, 'account/delete-account.html')

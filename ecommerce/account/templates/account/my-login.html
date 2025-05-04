@@ -1,6 +1,7 @@
 {% include "store/base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+
 {% block content %}
 
 <style>
@@ -12,26 +13,23 @@
 <body>
     <br>
     <div class="container bg-white shadow-md p-5 form-layout">
-        <h3>Create your account</h3>
-        <h5>Purchase your favourite products today!</h5>
+        <h3>Sign in to your account</h3>
         <hr>
         <form method="POST" autocomplete="off">
             {% csrf_token %}
             {{ form.username|as_crispy_field }}
             <br>
-            {{ form.email|as_crispy_field }}
-            <br>
-            {{ form.password1|as_crispy_field }}
-            <br>
-            {{ form.password2|as_crispy_field }}
-            <br>
+            {{ form.password|as_crispy_field }}
+            {{form.non_field_errors}}
             <br>
             <button type="submit" class="btn btn-secondary btn-lg w-100 btn-block p-2 mb-2">
                 &nbsp;
-                Create account
+                Login
             </button>
             <div class="text-center">
-                <a href="{% url 'my-login' %}">Have an account already?</a>
+                <a href="{% url 'register' %}">Don't have an account?</a>
+                <br>
+                <a href="{% url 'reset_password' %}">Forgot your password?</a>
             </div>
         </form>
     </div>
