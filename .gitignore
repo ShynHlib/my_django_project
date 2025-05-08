@@ -7,5 +7,7 @@ ecommerce/cart/__pycache__/
 ecommerce/cart/migrations/__pycache__/
 ecommerce/account/__pycache__/
 ecommerce/account/migrations/__pycache__/
+ecommerce/payment/__pycache__/
+ecommerce/payment/migrations/__pycache__
 .DS_Store
 ecommerce/.env
