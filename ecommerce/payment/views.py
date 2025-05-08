@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import ShippingAddress, Order, OrderItem
 from cart.cart import Cart
 
@@ -52,9 +54,19 @@ def complete_order(request):
 
             order_id = order.pk
 
+            product_list = []
+
             for item in cart:
                 OrderItem.objects.create(order_id=order_id, product=item['product'], quantity=item['qty'],
                                          price=item['price'], user=request.user)
+                product_list.append(item['product'])
+
+            send_mail('Order received', 'Hello ' + name + '!\n\n' +
+                      'Thank you for choosing us and placing your order :)' + '\n\n' +
+                      'See the order below:' + '\n\n' + str(product_list) + '\n\n' +
+                      'Total amount paid: $' + str(cart.get_total_price()),
+                      settings.EMAIL_HOST_USER, [email], fail_silently=False)
+
         # Non-authenticated users
         else:
             order = Order.objects.create(full_name=name, email=email, shipping_address=shipping_address,
@@ -62,9 +74,20 @@ def complete_order(request):
 
             order_id = order.pk
 
+            product_list = []
+
             for item in cart:
                 OrderItem.objects.create(order_id=order_id, product=item['product'], quantity=item['qty'],
                                          price=item['price'])
+                product_list.append(item['product'])
+
+
+
+            send_mail('Order received', 'Hello ' + name + '!\n\n' +
+                      'Thank you for choosing us and placing your order :)' + '\n\n' +
+                      'See the order below:' + '\n\n' + str(product_list) + '\n\n' +
+                      'Total amount paid: $' + str(cart.get_total_price()),
+                      settings.EMAIL_HOST_USER, [email], fail_silently=False)
 
         order_success = True
         response = JsonResponse({'success': order_success})

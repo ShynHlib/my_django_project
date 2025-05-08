@@ -19,6 +19,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='my-dashboard'),
     path('settings/', views.profile_management, name='my-profile'),
     path('delete-account/', views.delete_account, name='delete-account'),
+    path('track-orders/', views.track_orders, name='track-orders'),
     # Password management
     path('reset_password', auth_views.PasswordResetView.as_view(template_name='account/password/password-reset.html'), name='reset_password'),
     path('reset_password_sent', auth_views.PasswordResetDoneView.as_view(template_name='account/password/password-reset-sent.html'), name='password_reset_done'),

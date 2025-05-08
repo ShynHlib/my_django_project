@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import CreateUserForm, LoginForm, UpdateUserForm
 from payment.forms import ShippingForm
-from payment.models import ShippingAddress
+from payment.models import ShippingAddress, Order, OrderItem
 from django.contrib.sites.shortcuts import get_current_site
 from .token import user_tokenizer_generate
 from django.template.loader import render_to_string
@@ -11,6 +11,8 @@ from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
+from django.template.loader import render_to_string
 
 
 def register(request):
@@ -151,3 +153,26 @@ def manage_shipping(request):
     context = {'form': form}
 
     return render(request, 'account/manage-shipping.html', context=context)
+
+
+@login_required(login_url='my-login')
+def track_orders(request):
+    try:
+        order_items = OrderItem.objects.filter(user=request.user)
+        order_ids = {}
+
+
+        for item in order_items:
+            order_id = item.order_id
+
+            if order_id not in order_ids:
+                order_ids[order_id] = []
+            order_ids[order_id].append(item)
+
+        context = {'context': order_ids}
+
+        return render(request, 'account/track-orders.html', context=context)
+
+    except:
+        print("ya pidaras")
+        return render(request, 'account/track-orders.html')
